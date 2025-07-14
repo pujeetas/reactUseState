@@ -1,5 +1,5 @@
-import initialShoppingData from "../utils/mockData";
-import react, { useState } from "react";
+//import initialShoppingData from "../utils/mockData";
+import react, { useEffect, useState } from "react";
 
 const NameRating = ({ item }) => {
   return (
@@ -38,7 +38,23 @@ const ProdContainer = ({ items }) => {
   );
 };
 export const Body = () => {
-  const [shoppingData, setShoppingData] = useState(initialShoppingData);
+  const [shoppingData, setShoppingData] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = await fetch("https://fakestoreapi.com/products");
+
+        const json = await data.json();
+
+        setShoppingData(json);
+      } catch (error) {
+        console.log("Error fetching data:", error);
+      }
+    };
+    fetchData();
+  }, []);
+
   return (
     <div className="body">
       <div className="filter_btn">
