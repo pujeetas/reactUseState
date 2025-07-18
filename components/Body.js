@@ -1,4 +1,5 @@
 //import initialShoppingData from "../utils/mockData";
+import { Search } from "lucide-react";
 import react, { useEffect, useState } from "react";
 
 const NameRating = ({ item }) => {
@@ -39,6 +40,8 @@ const ProdContainer = ({ items }) => {
 };
 export const Body = () => {
   const [shoppingData, setShoppingData] = useState([]);
+  const [filteredRes, setFilteredres] = useState([]);
+  const [searchText, setSearchText] = useState("");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -48,6 +51,7 @@ export const Body = () => {
         const json = await data.json();
 
         setShoppingData(json);
+        setFilteredres(json);
       } catch (error) {
         console.log("Error fetching data:", error);
       }
@@ -57,6 +61,30 @@ export const Body = () => {
 
   return (
     <div className="body">
+      <div className="search-container ">
+        <input
+          className="search-input"
+          type="text"
+          placeholder="Search..."
+          value={searchText}
+          onChange={(e) => {
+            setSearchText(e.target.value);
+          }}
+        ></input>
+        <button
+          className="search-icon-button "
+          onClick={() => {
+            //filter rest
+            const filteredProd = shoppingData.filter((prod) =>
+              prod.title.toLowerCase().includes(searchText.toLowerCase())
+            );
+            setFilteredres(filteredProd);
+          }}
+        >
+          <Search size={20} color="#555" />
+        </button>
+      </div>
+      `
       <div className="filter_btn">
         <button
           onClick={() => {
@@ -71,8 +99,9 @@ export const Body = () => {
           Top Rated Products
         </button>
       </div>
+      `
       <div className="prod-container">
-        {shoppingData.map((items) => {
+        {filteredRes.map((items) => {
           return <ProdContainer key={items.id} items={items} />;
         })}
       </div>
